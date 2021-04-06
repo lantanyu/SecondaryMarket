@@ -34,6 +34,7 @@ public class ProductController {
     @PostMapping("/shiyan")
     public CommonResult shiyan(){
         return new CommonResult(200,"chen",productService.shiyan());
+        //haha
     }
     @PostMapping("/shiyan22")
     public CommonResult shiyan2(){
