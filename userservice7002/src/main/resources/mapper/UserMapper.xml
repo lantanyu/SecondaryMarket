@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.userservice.dao.UserMapper">
+
+    <select id="yanzhen" resultType="Integer">
+        SELECT COUNT(cuser.userid)
+        FROM cuser
+        WHERE cuser.username=#{username}
+    </select>
+
+    <insert id="createinfo" >
+        INSERT INTO info(info.userid) VALUES(#{userid})
+    </insert>
+
+    <select id="getid" resultType="BigInteger">
+        SELECT cuser.userid
+        FROM cuser
+        WHERE cuser.username=#{username}
+    </select>
+
+
+    <select id="denru" resultType="cuser">
+        SELECT *
+        FROM cuser
+        WHERE cuser.username=#{username} AND cuser.`password`=#{password}
+    </select>
+    
+    <insert id="zhuche" >
+        INSERT INTO cuser(cuser.username,cuser.`password`,cuser.createtime) VALUES(#{username},#{password},#{createtime})
+    </insert>
+
+    <update id="userupdata" parameterType="cuser">
+        UPDATE cuser
+        SET cuser.`name`=#{name},cuser.phone=#{phone},cuser.gender=#{gender},cuser.city=#{city},icon=#{icon}
+        WHERE userid=#{userid}
+    </update>
+
+    <select id="userbyid" resultType="cuser">
+        SELECT *
+        FROM cuser
+        WHERE cuser.userid=#{userid}
+    </select>
+
+    <insert id="concern" >
+        INSERT INTO concern(concern.userid,concern.byuserid,concern.createtime) VALUES(#{userid},#{byuserid},#{createtime})
+    </insert>
+
+    <delete id="yanzhenconcern">
+        DELETE FROM concern WHERE concern.userid=#{userid} AND concern.byuserid=#{byuserid}
+    </delete>
+
+    <select id="yanzhenconcern2" resultType="concern">
+        SELECT concern.concernid,concern.`status`
+        FROM concern
+        WHERE concern.userid=#{userid} AND concern.byuserid=#{byuserid}
+    </select>
+
+    <update id="upconcern">
+        UPDATE concern
+        SET concern.`status`=#{status}
+        WHERE concern.concernid=#{concernid}
+    </update>
+
+    <insert id="addaddress" parameterType="address" keyProperty="addressid" useGeneratedKeys="true" >
+        INSERT INTO address(address.userid,address.`name`,address.province,address.city,address.region,address.detailaddresss,address.phone) VALUES(#{userid},#{name},#{province},#{city},#{region},#{detailaddresss},#{phone})
+    </insert>
+
+    <update id="updataaddress">
+        UPDATE address
+        SET address.`name`=#{name},address.phone=#{phone},address.province=#{province},address.city=#{city},address.region=#{region},address.detailaddresss=#{detailaddresss}
+        WHERE addressid = #{addressid} AND userid =#{userid}
+    </update>
+
+    <select id="getaddress" resultType="address">
+        SELECT *
+        FROM address
+        WHERE address.userid=#{userid} AND address.ifstatus=1
+    </select>
+
+    <select id="getaddressbyid" resultType="address">
+        SELECT *
+        FROM address
+        WHERE address.addressid=#{addressid} AND address.ifstatus=1
+    </select>
+
+    <select id="getattendcount" resultType="Integer">
+        SELECT COUNT(*)
+        FROM concern
+        WHERE concern.userid=#{userid} AND concern.`status`=1
+    </select>
+
+    <select id="getfanscount" resultType="Integer">
+        SELECT COUNT(*)
+        FROM concern
+        WHERE concern.byuserid=#{userid} AND concern.`status`=1
+    </select>
+
+<!--    <select id="getcountcuser" resultType="cuser">-->
+<!--        SELECT *-->
+<!--        FROM (SELECT concern.createtime,concern.byuserid FROM concern WHERE concern.userid=#{userid}) AS R1-->
+<!--        INNER JOIN cuser-->
+<!--        ON R1.byuserid = cuser.userid-->
+<!--        ORDER BY R1.createtime DESC-->
+<!--        LIMIT #{yie},30-->
+<!--    </select>-->
+
+<!--    <select id="getcountcuser1" resultType="cuser">-->
+<!--        SELECT *-->
+<!--        FROM (SELECT concern.createtime,concern.byuserid FROM concern WHERE concern.userid=#{userid}) AS R1-->
+<!--        INNER JOIN cuser-->
+<!--        ON R1.byuserid = cuser.userid-->
+<!--        ORDER BY R1.createtime-->
+<!--        LIMIT #{yie},30-->
+<!--    </select>-->
+
+    <select id="getcountcuser" resultType="cuser">
+        SELECT *
+        FROM (SELECT concern.byuserid FROM concern WHERE concern.userid=#{userid} ORDER BY createtime DESC LIMIT #{yie},30) AS R1
+        INNER JOIN cuser
+        ON R1.byuserid = cuser.userid
+    </select>
+
+    <select id="getcountcuser1" resultType="cuser">
+        SELECT *
+        FROM (SELECT concern.byuserid FROM concern WHERE concern.userid=#{userid} ORDER BY createtime LIMIT #{yie},30) AS R1
+        INNER JOIN cuser
+        ON R1.byuserid = cuser.userid
+    </select>
+
+    <select id="getcountcuser2" resultType="cuser">
+        SELECT *
+        FROM (SELECT concern.byuserid FROM concern WHERE concern.userid=#{userid} AND `status`=1 ORDER BY createtime DESC) AS R1
+        INNER JOIN cuser
+        ON R1.byuserid = cuser.userid
+    </select>
+
+    <select id="getcountcuser3" resultType="cuser">
+        SELECT *
+        FROM (SELECT concern.byuserid FROM concern WHERE concern.userid=#{userid} AND `status`=1 ORDER BY createtime ) AS R1
+        INNER JOIN cuser
+        ON R1.byuserid = cuser.userid
+    </select>
+
+    <select id="getfancuser" resultType="cuser">
+        SELECT *
+        FROM (SELECT concern.userid FROM concern WHERE concern.byuserid=#{userid} ORDER BY createtime DESC) AS R1
+        INNER JOIN cuser
+        ON R1.userid = cuser.userid
+    </select>
+
+
+</mapper>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.orderservice.dao.OrderMapper">
+
+    <select id="shiyan" resultType="order">
+        SELECT *
+        FROM `order`
+        WHERE orderid =1
+    </select>
+
+    <select id="getorder1" resultType="order" >
+        SELECT *
+        FROM `order`
+        where userid = #{userid}
+        ORDER BY orderid DESC
+    </select>
+
+    <select id="getorder2" resultType="order" >
+        SELECT *
+        FROM `order`
+        where byuserid = #{userid}
+        ORDER BY orderid DESC
+    </select>
+
+    <insert id="createorder" parameterType="order" keyProperty="orderid" useGeneratedKeys="true" >
+        INSERT INTO `order`(productid,userid,sn,baoyouprice,price,productname,producticon,method,addressname,province,city,region,detailaddresss,phone,tijiaotime,byuserid) VALUES(#{productid},#{userid},#{sn},#{baoyouprice},#{price},#{productname},#{producticon},#{method},#{addressname},#{province},#{city},#{region},#{detailaddresss},#{phone},#{tijiaotime},#{byuserid})
+    </insert>
+
+    <update id="zhufu">
+        UPDATE `order`
+        SET `status` = 1,zhifutime =#{zhifutime}
+        WHERE orderid=#{orderid} AND userid = #{userid} AND `status`=0
+    </update>
+
+    <update id="fahuo" parameterType="order">
+        UPDATE `order`
+        SET `status` = 2,kuidihao=#{kuidihao},kuidi =#{kuidi},fahuotime=#{fahuotime}
+        WHERE orderid=#{orderid} AND byuserid =#{byuserid} AND `status`=1 AND method !=2 AND method !=3
+    </update>
+
+    <update id="queding">
+        UPDATE `order`
+        SET `status` = 5,sohuotime =#{sohuotime}
+        WHERE orderid=#{orderid} AND userid = #{userid} AND `status`=2 AND method !=2 AND method !=3 OR orderid=#{orderid} AND userid = #{userid} AND `status`=1 AND method !=0 AND method !=1
+    </update>
+
+    <select id="getproductid" resultType="BigInteger">
+        SELECT productid
+        FROM `order`
+        WHERE orderid =#{orderid}
+    </select>
+
+    <resultMap type="byorder" id="getbyorders">
+        <id property="byorderid" column="byorderid"/>
+        <result property="order.userid" column="userid"/>
+        <result property="order.byuserid" column="byuserid"/>
+    </resultMap>
+
+    <select id="getorder" resultType="order">
+        SELECT *
+        FROM `order`
+        WHERE orderid =#{orderid}
+    </select>
+
+    <select id="getbyorder" resultMap="getbyorders">
+        SELECT byorder.*,`order`.userid,`order`.byuserid
+        FROM byorder,`order`
+        WHERE byorder.orderid = `order`.orderid AND byorder.orderid =#{orderid}
+    </select>
+
+    <insert id="createbyorder" parameterType="byorder" keyProperty="byorderid" useGeneratedKeys="true" >
+        INSERT INTO byorder(sn,yunprice,methon,tijiaotime,orderid,tuihuotext) VALUES(#{sn},#{yunprice},#{methon},#{tijiaotime},#{orderid},#{tuihuotext})
+    </insert>
+
+    <update id="uporder">
+        UPDATE `order`
+        SET `status` = 6
+        WHERE orderid=#{orderid}
+    </update>
+
+    <update id="yestuihuo">
+        UPDATE byorder
+        SET `status` =1,addressname=#{addressname},phone= #{phone},province =#{province} ,city= #{city},region=#{region} ,detailaddresss=#{detailaddresss}
+        WHERE byorderid = #{byorderid} AND `status` =0
+    </update>
+
+    <select id="yanzhenbyuser" resultType="BigInteger">
+        SELECT R2.byuserid
+        FROM (SELECT orderid FROM byorder WHERE byorderid =#{byorderid})AS R1
+        INNER JOIN (SELECT orderid,byuserid FROM `order`)AS R2
+        ON R1.orderid =R2.orderid
+    </select>
+
+    <select id="yanzhenuser" resultType="BigInteger">
+        SELECT R2.userid
+        FROM (SELECT orderid FROM byorder WHERE byorderid =#{byorderid})AS R1
+        INNER JOIN (SELECT orderid,userid FROM `order`)AS R2
+        ON R1.orderid =R2.orderid
+    </select>
+
+    <select id="yanzhenbyuserorder" resultType="order">
+        SELECT R2.productid,R2.byuserid
+        FROM (SELECT orderid FROM byorder WHERE byorderid =#{byorderid})AS R1
+        INNER JOIN (SELECT orderid,byuserid,productid FROM `order`)AS R2
+        ON R1.orderid =R2.orderid
+    </select>
+
+    <update id="tuihuofahuo" parameterType="byorder">
+        UPDATE byorder
+        SET `status` = 2,kuidihao=#{kuidihao},kuidi =#{kuidi},fahuotime=#{fahuotime}
+        WHERE byorderid=#{byorderid} AND `status` = 1
+    </update>
+
+    <update id="tuihuoqueding">
+        UPDATE byorder
+        SET `status` = 3,sohuotime =#{sohuotime}
+        WHERE byorderid=#{byorderid} AND `status`=2
+    </update>
+
+    <update id="zhifuchaoshi">
+        UPDATE `order`
+        SET `status` = 4
+        WHERE orderid=#{orderid} AND `status` = 0
+    </update>
+
+
+
+
+
+
+</mapper>

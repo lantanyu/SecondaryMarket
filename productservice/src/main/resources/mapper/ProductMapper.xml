@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.productservice.dao.ProductMapper">
+
+    <select id="shiyan" resultType="fenlei1">
+        SELECT `name`
+        FROM fenlei1
+        WHERE fenlei1.fenlei1id =1
+    </select>
+
+    <select id="shiyan4" resultType="fenlei1">
+        SELECT `name`
+        FROM fenlei1
+        WHERE fenlei1.fenlei1id =1 for update
+    </select>
+
+    <select id="shiyan5" resultType="fenlei1">
+        SELECT `name`
+        FROM fenlei1
+        WHERE fenlei1.fenlei1id =1 lock in share mode
+    </select>
+
+    <update id="shiyan2" >
+        UPDATE fenlei1
+        SET `name` = 'yyy'
+        WHERE fenlei1.fenlei1id =1
+    </update>
+
+    <update id="shiyan3" >
+        UPDATE fenlei1
+        SET `name` = 'ooo'
+        WHERE fenlei1.fenlei1id =1
+    </update>
+
+    <insert id="creatfenlei1" parameterType="fenlei1" keyProperty="fenlei1id" useGeneratedKeys="true" >
+        INSERT INTO fenlei1(fenlei1.`name`,fenlei1.text) VALUES(#{name},#{text})
+    </insert>
+
+    <insert id="creatfenlei2" parameterType="fenlei2" keyProperty="fenlei2id" useGeneratedKeys="true" >
+        INSERT INTO fenlei2(fenlei2.fenlei1id,fenlei2.`name`,fenlei2.icon) VALUES(#{fenlei1id},#{name},#{icon})
+    </insert>
+
+    <insert id="creatproduct" parameterType="product" keyProperty="productid" useGeneratedKeys="true" >
+        INSERT INTO product(fenlei2id,userid,username,usericon,pic,productidname,text,method,price,baoyouprice,fabutime,city) VALUES(#{fenlei2id},#{userid},#{username},#{usericon},#{pic},#{productidname},#{text},#{method},#{price},#{baoyouprice},#{fabutime},#{city})
+    </insert>
+
+    <insert id="creatcomment" parameterType="comment" keyProperty="commentid" useGeneratedKeys="true" >
+        INSERT INTO comment(productid,userid,`name`,icon,text,time) VALUES(#{productid},#{userid},#{name},#{icon},#{text},#{time})
+    </insert>
+
+    <insert id="creatbycomment" parameterType="bycomment" keyProperty="bycommentid" useGeneratedKeys="true" >
+        INSERT INTO bycomment(commentid,userid,`name`,icon,text,time,byuserid) VALUES(#{commentid},#{userid},#{name},#{icon},#{text},#{time},#{byuserid})
+    </insert>
+
+    <resultMap type="fenlei1" id="fenlei1map">
+        <id property="fenlei1id" column="fenlei1id"/>
+        <result property="name" column="name"/>
+        <result property="icon" column="icon"/>
+        <result property="time" column="time"/>
+        <result property="text" column="text"/>
+        <result property="status" column="status"/>
+        <collection property="fenlei2s" ofType="fenlei2">
+            <id property="fenlei2id" column="fenlei2id"/>
+            <result property="fenlei1id" column="fenlei1id1"/>
+            <result property="name" column="name1"/>
+            <result property="icon" column="icon1"/>
+            <result property="status" column="status1"/>
+        </collection>
+    </resultMap>
+
+    <select id="getfenlei1" resultMap="fenlei1map">
+--         SELECT fenlei1.*,fenlei2.fenlei2id,fenlei2.fenlei1id AS fenlei1id1,fenlei2.`name` AS name1,fenlei2.icon AS icon1,fenlei2.`status` AS status1
+--         FROM fenlei1 LEFT JOIN fenlei2
+--         on fenlei1.fenlei1id =fenlei2.fenlei1id
+        SELECT R1.*,R2.fenlei2id,R2.fenlei1id AS fenlei1id1,R2.`name` AS name1,R2.icon AS icon1,R2.`status` AS status1
+        FROM (SELECT * FROM fenlei1 WHERE fenlei1.`status`=1) AS R1
+        LEFT JOIN (SELECT * FROM fenlei2 WHERE fenlei2.`status`=1) AS R2
+        on R1.fenlei1id =R2.fenlei1id
+    </select>
+
+    <select id="getproductbyfenlei2" resultType="product">
+        SELECT *
+        FROM product
+        WHERE fenlei2id = #{fenlei2id} AND deletestatus =1 AND method =0 AND productstatus=0
+        ORDER BY sort DESC
+    </select>
+
+    <select id="getproductbyname" resultType="product">
+        SELECT *
+        FROM product
+        WHERE MATCH(productidname,text) AGAINST(#{name}) AND deletestatus =1 AND productstatus = 0
+        ORDER BY sort DESC
+        LIMIT #{yie},6
+    </select>
+
+    <select id="getproductbynamecount" resultType="Long">
+        SELECT COUNT(*)
+        FROM product
+        WHERE MATCH(productidname,text) AGAINST(#{name}) AND deletestatus =1 AND productstatus = 0
+    </select>
+
+    <select id="getproduct" resultType="product">
+        SELECT *
+        FROM product
+        WHERE userid=#{userid} AND deletestatus =1
+        ORDER BY sort DESC
+        LIMIT #{yie},6
+    </select>
+
+    <select id="getproductcount" resultType="Long">
+        SELECT COUNT(*)
+        FROM product
+        WHERE userid=#{userid} AND deletestatus =1
+    </select>
+
+    <select id="getproductbyalluser" resultType="product">
+        SELECT *
+        FROM product
+        WHERE deletestatus =1 AND productstatus = 0
+        ORDER BY sort DESC
+        LIMIT #{yie},6
+    </select>
+
+    <select id="getproductbyallusercount" resultType="Long">
+        SELECT COUNT(*)
+        FROM product
+        WHERE deletestatus =1 AND productstatus = 0
+    </select>
+
+    <resultMap type="product" id="productmap">
+        <id property="productid" column="productid"/>
+        <result property="fenlei2id" column="fenlei2id"/>
+        <result property="userid" column="userid"/>
+        <result property="username" column="username"/>
+        <result property="usericon" column="usericon"/>
+        <result property="pic" column="pic"/>
+        <result property="productidname" column="productidname"/>
+        <result property="text" column="text"/>
+        <result property="ifbaoyou" column="ifbaoyou"/>
+        <result property="deletestatus" column="deletestatus"/>
+        <result property="productstatus" column="productstatus"/>
+        <result property="method" column="method"/>
+        <result property="price" column="price"/>
+        <result property="baoyouprice" column="baoyouprice"/>
+        <result property="fabutime" column="fabutime"/>
+        <result property="city" column="city"/>
+        <result property="sort" column="sort"/>
+        <result property="fenlen2name" column="fenlei2_name"/>
+        <collection property="comments" ofType="comment">
+            <id property="commentid" column="commentid"/>
+            <result property="productid" column="comment_productid"/>
+            <result property="userid" column="comment_userid"/>
+            <result property="name" column="comment_name"/>
+            <result property="icon" column="comment_icon"/>
+            <result property="text" column="comment_text"/>
+            <result property="time" column="comment_time"/>
+            <collection property="bycomments" ofType="bycomment">
+                <id property="bycommentid" column="bycommentid"/>
+                <result property="commentid" column="bycomment_commentid"/>
+                <result property="userid" column="bycomment_userid"/>
+                <result property="name" column="bycomment_name"/>
+                <result property="icon" column="bycomment_icon"/>
+                <result property="text" column="bycomment_text"/>
+                <result property="time" column="bycomment_time"/>
+                <result property="byuserid" column="byuserid"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getproductxxbyid" resultMap="productmap">
+        SELECT R1.*,R2.`name` AS fenlei2_name,
+        R3.commentid,R3.productid AS comment_productid,R3.userid AS comment_userid,R3.`name` AS comment_name,R3.icon AS comment_icon,R3.text AS comment_text,R3.time AS comment_time,
+        R4.bycommentid,R4.commentid AS bycomment_commentid,R4.userid AS bycomment_userid,R4.`name` AS bycomment_name,R4.icon AS bycomment_icon,R4.text AS bycomment_text,R4.time AS bycomment_time,R4.byuserid
+        FROM (SELECT * FROM product WHERE productid=#{productid})AS R1
+        INNER JOIN (SELECT fenlei2id,`name` FROM fenlei2)AS R2
+        ON R1.fenlei2id =R2.fenlei2id
+        LEFT JOIN (SELECT * FROM `comment` WHERE `status` =1 )AS R3
+        ON R1.productid = R3.productid
+        LEFT JOIN (SELECT * FROM bycomment WHERE bycomment.`status` =1 )As R4
+        ON R3.commentid = R4.commentid
+    </select>
+
+    <select id="getproductifbyid" resultType="product">
+        SELECT *
+        FROM product
+        WHERE productid =#{productid}
+    </select>
+
+    <select id="delecticon" resultType="Integer">
+        SELECT productstatus
+        FROM product
+        WHERE productid =#{productid} AND userid = #{userid}
+    </select>
+
+    <update id="updataproduct" parameterType="product" >
+        UPDATE product
+        SET fenlei2id =#{fenlei2id},pic =#{pic},productidname =#{productidname},text =#{text},method =#{method},price=#{price},baoyouprice=#{baoyouprice},city=#{city}
+        WHERE productid = #{productid}
+    </update>
+
+    <update id="updatafenlei1" parameterType="fenlei1">
+        UPDATE fenlei1
+        SET`name` =#{name},text =#{text},`status` =#{status}
+        WHERE fenlei1id =#{fenlei1id}
+    </update>
+
+    <update id="updatafenlei2" parameterType="fenlei2">
+        UPDATE fenlei2
+        SET`name` =#{name},icon=#{icon},`status` =#{status}
+        WHERE fenlei2id =#{fenlei2id}
+    </update>
+
+    <select id="ifproductstatus" resultType="Integer">
+        SELECT productstatus
+        FROM product
+        WHERE productid = #{productid} AND deletestatus=1
+    </select>
+
+    <update id="updataifproductstatus">
+        UPDATE product
+        SET productstatus = #{status}
+        WHERE productid = #{productid} AND productstatus = 0 AND deletestatus=1
+    </update>
+
+    <update id="updataifproductstatuss">
+        UPDATE product
+        SET productstatus = #{status}
+        WHERE productid = #{productid} AND productstatus = 1 AND deletestatus=1
+    </update>
+
+
+</mapper>
