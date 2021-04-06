@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -54,16 +56,28 @@ public class GatewayFilter implements GlobalFilter, Ordered {
 //        return response.writeWith(Mono.just(buffer));
         List<String> token = request.getHeaders().get("token");
         if(token==null) {
+            String json ="{\"code\":100,\"message\":\"没有权限\"}";
+            byte[] bits = json.getBytes(StandardCharsets.UTF_8);
+            DataBuffer buffer = response.bufferFactory().wrap(bits);
+            response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
             response.setStatusCode(HttpStatus.NOT_ACCEPTABLE);
-            return response.setComplete();
+            return response.writeWith(Mono.just(buffer));
+//            response.setStatusCode(HttpStatus.NOT_ACCEPTABLE);
+//            return response.setComplete();
         }else {
              Long expire = redisTemplate.getExpire(token.get(0));
              if (expire>0) {
                  redisTemplate.expire(token.get(0),60L, TimeUnit.MINUTES);
                  return chain.filter(exchange);
              }else {
+                 String json ="{\"code\":100,\"message\":\"没有权限\"}";
+                 byte[] bits = json.getBytes(StandardCharsets.UTF_8);
+                 DataBuffer buffer = response.bufferFactory().wrap(bits);
+                 response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
                  response.setStatusCode(HttpStatus.NOT_ACCEPTABLE);
-                 return response.setComplete();
+                 return response.writeWith(Mono.just(buffer));
+//                 response.setStatusCode(HttpStatus.NOT_ACCEPTABLE);
+//                 return response.setComplete();
              }
 
         }
