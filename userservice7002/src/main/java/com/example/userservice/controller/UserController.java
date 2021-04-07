@@ -108,7 +108,7 @@ public class UserController {
         cuser cuser = redisService1.get(token);
         return new CommonResult<cuser>(200,"成功",cuser);
     }
-    @GetMapping("/userbyid/{userid}")
+    @GetMapping("/all/userbyid/{userid}")
     public CommonResult<cuser> userbyid(@PathVariable(name = "userid") BigInteger id) {
        cuser cuser = userService.userbyid(id);
        if(cuser==null) {
@@ -194,7 +194,7 @@ public class UserController {
         return new CommonResult<List<Integer>>(200,"成功",userService.getcount(cuser.getUserid()));
        // return userService.getcount(cuser.getUserid());
     }
-    @GetMapping("getcountid/{concernid}")
+    @GetMapping("/all/getcountid/{concernid}")
     public CommonResult<List<Integer>> getcountid(@PathVariable(name = "concernid") BigInteger concernid) {
         return new CommonResult<List<Integer>>(200,"成功",userService.getcount(concernid));
         //return new CommonResult<List<Integer>>(200,"成功");
