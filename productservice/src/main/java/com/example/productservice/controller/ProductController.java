@@ -256,7 +256,7 @@ public class ProductController {
         }
         return new CommonResult(400,"修改失败");
     }
-    @PostMapping("/updatafenlei1")
+    @PostMapping("/glbs/updatafenlei1")
     public CommonResult updatafenlei1(@RequestBody fenlei1 fenlei1) {
         String regex = "[\\u4e00-\\u9fa5]{1,6}";
         String regex_text = "[\\u4e00-\\u9fa5]{1,50}";
@@ -269,7 +269,7 @@ public class ProductController {
         }
         return new CommonResult(400,"修改失败");
     }
-    @PostMapping("/updatafenlei2")
+    @PostMapping("/glbs/updatafenlei2")
     public CommonResult updatafenlei2(@RequestParam("files")List<MultipartFile> files, @RequestParam("json") String json, HttpServletRequest request) throws JsonProcessingException {
         String regex = "[\\u4e00-\\u9fa5]{1,6}";
         if(json==null)return new CommonResult(400,"请传入json");

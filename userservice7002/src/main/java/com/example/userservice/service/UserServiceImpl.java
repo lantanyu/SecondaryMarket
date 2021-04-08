@@ -1,9 +1,6 @@
 package com.example.userservice.service;
 
-import com.example.commons.po.User;
-import com.example.commons.po.address;
-import com.example.commons.po.concern;
-import com.example.commons.po.cuser;
+import com.example.commons.po.*;
 import com.example.userservice.dao.UserMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -24,6 +21,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public cuser denru(String username, String password) {
         return userMapper.denru(username,password);
+    }
+
+    @Override
+    public auser gldenru(auser auser) {
+        return userMapper.gldenru(auser);
     }
 
     @Override

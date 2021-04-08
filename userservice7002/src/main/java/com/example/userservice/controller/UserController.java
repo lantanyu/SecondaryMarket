@@ -31,14 +31,13 @@ public class UserController {
     @Autowired
     private RedisService1<cuser> redisService1;
     @Autowired
+    private RedisService1<auser> redisService2;
+    @Autowired
     private ProductSerice productSerice;
 
-    @PostMapping("/shiyan")
+    @PostMapping("/glbs/shiyan")
     public String shiyan(@RequestBody String name) {
-        int i =0;
-        Integer a =3;
-        i=a;
-        System.out.println(i);
+
         return "{\"name\":\"sssss\"}" ;
 
     }
@@ -50,6 +49,17 @@ public class UserController {
             redisService1.set(token,cuser1,60*60);
             cuser1.setToken(token);
             return new CommonResult<cuser>(200,"登入成功",cuser1);
+        }
+        return  new CommonResult(400,"密码错误");
+    }
+    @PostMapping("/glbs/gldenru")
+    public CommonResult<auser> gldenru(@RequestBody auser auser){
+        auser auser1  = userService.gldenru(auser);
+        if(auser1!=null){
+            String token = UUID.randomUUID()+"";
+            redisService2.set(token,auser1,60*60);
+            auser1.setToken(token);
+            return new CommonResult<auser>(200,"登入成功",auser1);
         }
         return  new CommonResult(400,"密码错误");
     }

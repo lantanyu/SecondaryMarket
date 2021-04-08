@@ -2,6 +2,7 @@ package com.example.userservice.service;
 
 
 import com.example.commons.po.address;
+import com.example.commons.po.auser;
 import com.example.commons.po.cuser;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 
 public interface UserService {
     public cuser denru(String username,String password);
+    public auser gldenru(auser auser);
     public Integer zhuche(String username,String password);
     public Integer userupdata(cuser cuser);
     public cuser userbyid(BigInteger userid);

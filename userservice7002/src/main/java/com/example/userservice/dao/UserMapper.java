@@ -1,10 +1,7 @@
 package com.example.userservice.dao;
 
 
-import com.example.commons.po.User;
-import com.example.commons.po.address;
-import com.example.commons.po.concern;
-import com.example.commons.po.cuser;
+import com.example.commons.po.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -20,6 +17,7 @@ public interface UserMapper {
     public Integer createinfo(@Param("userid")BigInteger userid);
     public BigInteger getid(@Param("username") String username);
     public cuser denru(@Param("username") String username,@Param("password") String password);
+    public auser gldenru(auser auser);
     public Integer zhuche(@Param("username") String username,@Param("password") String password,@Param("createtime") Timestamp createtime);
     public Integer userupdata(cuser cuser);
     public cuser userbyid(@Param("userid")BigInteger userid);

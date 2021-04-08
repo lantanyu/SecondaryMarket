@@ -1,5 +1,6 @@
 package com.example.gateway.filter;
 
+import com.example.commons.po.cuser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;

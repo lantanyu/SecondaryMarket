@@ -19,4 +19,5 @@ public class auser implements Serializable {
     private Timestamp createtime;
     private Timestamp htime;
     private int status;
+    private String token;
 }

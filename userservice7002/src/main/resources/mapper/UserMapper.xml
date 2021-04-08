@@ -24,6 +24,12 @@
         FROM cuser
         WHERE cuser.username=#{username} AND cuser.`password`=#{password}
     </select>
+
+    <select id="gldenru" parameterType="auser" resultType="auser">
+        SELECT *
+        FROM auser
+        WHERE auser.username=#{username} AND auser.`password`=#{password}
+    </select>
     
     <insert id="zhuche" >
         INSERT INTO cuser(cuser.username,cuser.`password`,cuser.createtime) VALUES(#{username},#{password},#{createtime})
