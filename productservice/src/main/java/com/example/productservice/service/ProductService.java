@@ -25,6 +25,10 @@ public interface ProductService {
 
     public List<fenlei1> getfenlei1();
 
+    public List<fenlei1> getfenlei1s();
+
+    public List<fenlei2> getfenlei2(BigInteger fenlei1id);
+
     public Map getproductbyfenlei2(BigInteger fenlei2id, int yie);
 
     public List<product> getproductbyname(String name,int yie);
@@ -40,6 +44,10 @@ public interface ProductService {
     public Integer updataproduct(product product);
 
     public Integer updatafenlei1(fenlei1 fenlei1);
+
+    public Integer updatafenlei1status(fenlei1 fenlei1);
+
+    public Integer updatafenlei2status(fenlei2 fenlei2);
 
     public Integer updatafenlei2(fenlei2 fenlei2);
 

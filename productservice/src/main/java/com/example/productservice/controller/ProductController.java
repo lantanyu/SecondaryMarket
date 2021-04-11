@@ -171,6 +171,15 @@ public class ProductController {
     public CommonResult<List<fenlei1>> getfenlei1() {
         return new CommonResult<List<fenlei1>>(200,"成功", productService.getfenlei1());
     }
+    @GetMapping("/glbs/getfenlei1s")
+    public CommonResult<List<fenlei1>> getfenlei1s() {
+        return new CommonResult<List<fenlei1>>(200,"成功", productService.getfenlei1s());
+    }
+    @GetMapping("/all/getfenlei2/{fenlei1id}")
+    public CommonResult<List<fenlei2>> getfenlei2(@PathVariable(name = "fenlei1id") BigInteger fenlei1id) {
+
+        return new CommonResult<List<fenlei2>>(200,"成功", productService.getfenlei2(fenlei1id));
+    }
     @GetMapping("/all/getproductbyfenlei2/{fenlei2id}/{yie}")
     public CommonResult<Map> getproductbyfenlei2(@PathVariable(name = "fenlei2id") BigInteger fenlei2id, @PathVariable(value = "yie") int yie) {
         return new CommonResult<Map>(200,"成功", productService.getproductbyfenlei2(fenlei2id,yie));
@@ -266,6 +275,22 @@ public class ProductController {
         if (fenlei1.getStatus()!=1&&fenlei1.getStatus()!=0)return new CommonResult(400,"status格式不正确");
         if (productService.updatafenlei1(fenlei1)>0){
             return new CommonResult<fenlei1>(200,"修改成功",fenlei1);
+        }
+        return new CommonResult(400,"修改失败");
+    }
+    @PostMapping("/glbs/updatafenlei1status")
+    public CommonResult updatafenlei1status(@RequestBody fenlei1 fenlei1) {
+        if (fenlei1.getStatus()!=1&&fenlei1.getStatus()!=0)return new CommonResult(400,"status格式不正确");
+        if (productService.updatafenlei1status(fenlei1)>0){
+            return new CommonResult(200,"修改成功");
+        }
+        return new CommonResult(400,"修改失败");
+    }
+    @PostMapping("/glbs/updatafenlei2status")
+    public CommonResult updatafenlei2status(@RequestBody fenlei2 fenlei2) {
+        if (fenlei2.getStatus()!=1&&fenlei2.getStatus()!=0)return new CommonResult(400,"status格式不正确");
+        if (productService.updatafenlei2status(fenlei2)>0){
+            return new CommonResult(200,"修改成功");
         }
         return new CommonResult(400,"修改失败");
     }

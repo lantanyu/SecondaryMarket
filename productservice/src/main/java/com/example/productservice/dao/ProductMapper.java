@@ -22,6 +22,8 @@ public interface ProductMapper {
     public Integer creatcomment(comment comment);
     public Integer creatbycomment(bycomment bycomment);
     public List<fenlei1> getfenlei1();
+    public List<fenlei1> getfenlei1s();
+    public List<fenlei2> getfenlei2(@Param("fenlei1id") BigInteger fenlei1id);
     public List<product> getproductbyfenlei2(@Param("fenlei2id") BigInteger fenlei2id);
     public List<product> getproductbyname(@Param("name") String name,@Param("yie")int yie);
     public long getproductbynamecount(@Param("name") String name);
@@ -34,6 +36,8 @@ public interface ProductMapper {
     public Integer delecticon(@Param("productid")BigInteger productid,@Param("userid")BigInteger userid);
     public Integer updataproduct(product product);
     public Integer updatafenlei1(fenlei1 fenlei1);
+    public Integer updatafenlei1status(fenlei1 fenlei1);
+    public Integer updatafenlei2status(fenlei2 fenlei2);
     public Integer updatafenlei2(fenlei2 fenlei2);
     public Integer ifproductstatus(@Param("productid")BigInteger productid);
     public Integer updataifproductstatus(@Param("productid")BigInteger productid,@Param("status")int status);

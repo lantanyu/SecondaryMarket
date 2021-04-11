@@ -78,6 +78,22 @@
         on R1.fenlei1id =R2.fenlei1id
     </select>
 
+    <select id="getfenlei1s" resultMap="fenlei1map">
+--         SELECT fenlei1.*,fenlei2.fenlei2id,fenlei2.fenlei1id AS fenlei1id1,fenlei2.`name` AS name1,fenlei2.icon AS icon1,fenlei2.`status` AS status1
+--         FROM fenlei1 LEFT JOIN fenlei2
+--         on fenlei1.fenlei1id =fenlei2.fenlei1id
+        SELECT R1.*,R2.fenlei2id,R2.fenlei1id AS fenlei1id1,R2.`name` AS name1,R2.icon AS icon1,R2.`status` AS status1
+        FROM (SELECT * FROM fenlei1 ) AS R1
+        LEFT JOIN (SELECT * FROM fenlei2 ) AS R2
+        on R1.fenlei1id =R2.fenlei1id
+    </select>
+
+    <select id="getfenlei2" resultType="fenlei2">
+        SELECT *
+        FROM fenlei2
+        WHERE fenlei1id=#{fenlei1id}
+    </select>
+
     <select id="getproductbyfenlei2" resultType="product">
         SELECT *
         FROM product
@@ -90,7 +106,7 @@
         FROM product
         WHERE MATCH(productidname,text) AGAINST(#{name}) AND deletestatus =1 AND productstatus = 0
         ORDER BY sort DESC
-        LIMIT #{yie},6
+        LIMIT #{yie},10
     </select>
 
     <select id="getproductbynamecount" resultType="Long">
@@ -104,7 +120,7 @@
         FROM product
         WHERE userid=#{userid} AND deletestatus =1
         ORDER BY sort DESC
-        LIMIT #{yie},6
+        LIMIT #{yie},10
     </select>
 
     <select id="getproductcount" resultType="Long">
@@ -118,7 +134,7 @@
         FROM product
         WHERE deletestatus =1 AND productstatus = 0
         ORDER BY sort DESC
-        LIMIT #{yie},6
+        LIMIT #{yie},10
     </select>
 
     <select id="getproductbyallusercount" resultType="Long">
@@ -202,6 +218,18 @@
         UPDATE fenlei1
         SET`name` =#{name},text =#{text},`status` =#{status}
         WHERE fenlei1id =#{fenlei1id}
+    </update>
+
+    <update id="updatafenlei1status" parameterType="fenlei1">
+        UPDATE fenlei1
+        SET `status` =#{status}
+        WHERE fenlei1id =#{fenlei1id}
+    </update>
+
+    <update id="updatafenlei2status" parameterType="fenlei2">
+        UPDATE fenlei2
+        SET `status` =#{status}
+        WHERE fenlei2id =#{fenlei2id}
     </update>
 
     <update id="updatafenlei2" parameterType="fenlei2">

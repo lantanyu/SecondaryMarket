@@ -70,8 +70,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<fenlei1> getfenlei1s() {
+        return productMapper.getfenlei1s();
+    }
+
+    @Override
+    public List<fenlei2> getfenlei2(BigInteger fenlei1id) {
+        return productMapper.getfenlei2(fenlei1id);
+    }
+
+    @Override
     public Map getproductbyfenlei2(BigInteger fenlei2id, int yie) {
-        Page<Object> page = PageHelper.offsetPage(yie, 6);
+        Page<Object> page = PageHelper.offsetPage(yie, 10);
         List<product> products = productMapper.getproductbyfenlei2(fenlei2id);
         Map map = new HashMap();
         map.put("list",products);
@@ -81,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<product> getproductbyname(String name ,int yie) {
-        yie = yie*6;
+        yie = yie*10;
         long total = productMapper.getproductbynamecount(name);
         List<product> products = productMapper.getproductbyname(name,yie);
         if(products.size()>0){
@@ -92,7 +102,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<product> getproduct(BigInteger userid,int yie) {
-        yie = yie*6;
+        yie = yie*10;
         long total = productMapper.getproductcount(userid);
         List<product> products = productMapper.getproduct(userid,yie);
         if(products.size()>0){
@@ -103,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<product> getproductbyalluser(int yie) {
-        yie = yie*6;
+        yie = yie*10;
         long total = productMapper.getproductbyallusercount();
         List<product> products = productMapper.getproductbyalluser(yie);
         if(products.size()>0){
@@ -136,6 +146,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Integer updatafenlei1(fenlei1 fenlei1) {
         return productMapper.updatafenlei1(fenlei1);
+    }
+
+    @Override
+    public Integer updatafenlei1status(fenlei1 fenlei1) {
+        return productMapper.updatafenlei1status(fenlei1);
+    }
+
+    @Override
+    public Integer updatafenlei2status(fenlei2 fenlei2) {
+        return productMapper.updatafenlei2status(fenlei2);
     }
 
     @Override
