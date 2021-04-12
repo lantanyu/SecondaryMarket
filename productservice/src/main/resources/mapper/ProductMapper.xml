@@ -238,6 +238,12 @@
         WHERE fenlei2id =#{fenlei2id}
     </update>
 
+    <update id="updatafenlei2s" parameterType="fenlei2">
+        UPDATE fenlei2
+        SET`name` =#{name},`status` =#{status}
+        WHERE fenlei2id =#{fenlei2id}
+    </update>
+
     <select id="ifproductstatus" resultType="Integer">
         SELECT productstatus
         FROM product
@@ -255,6 +261,26 @@
         SET productstatus = #{status}
         WHERE productid = #{productid} AND productstatus = 1 AND deletestatus=1
     </update>
+
+    <select id="getproductlist" resultType="product">
+        SELECT *
+        FROM product
+        <where>
+            <if test="productid !=null and productid != 0 ">
+                and productid=#{productid}
+            </if>
+            <if test="productidname !=null and productidname != '' ">
+                and MATCH(productidname,text) AGAINST(#{productidname})
+            </if>
+            <if test="deletestatus !=null ">
+                and deletestatus =#{deletestatus}
+            </if>
+            <if test="productstatus !=null ">
+                and productstatus =#{productstatus}
+            </if>
+        </where>
+        ORDER BY sort DESC
+    </select>
 
 
 </mapper>

@@ -57,5 +57,8 @@ public interface ProductService {
 
     public product updataifproductstatuss(BigInteger productid,int status);
 
+    public Map getproductlist(Integer yie,Integer pianyi,product product);
+
+
 
 }

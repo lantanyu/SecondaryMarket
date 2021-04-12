@@ -42,7 +42,7 @@ public class ProductController {
         return new CommonResult(200,"chen");
     }
 
-    @PostMapping("/creatfenlei1")
+    @PostMapping("/glbs/creatfenlei1")
     public CommonResult<fenlei1> creatfenlei1(@RequestBody fenlei1 fenlei1) {
         String regex = "[\\u4e00-\\u9fa5]{1,6}";
         String regex_text = "[\\u4e00-\\u9fa5]{1,50}";
@@ -54,25 +54,25 @@ public class ProductController {
         }
         return new CommonResult(400,"创建失败");
     }
-    @PostMapping("/creatfenlei2")
-    public CommonResult<fenlei2> creatfenlei2(@RequestParam("files")List<MultipartFile> files, @RequestParam("fenlei1id")BigInteger fenlei1id, @RequestParam("name")String name, @RequestParam("text")String text) {
+    @PostMapping("/glbs/creatfenlei2")
+    public CommonResult<fenlei2> creatfenlei2(@RequestParam("files")MultipartFile files, @RequestParam("fenlei1id")BigInteger fenlei1id, @RequestParam("name")String name) {
         String regex = "[\\u4e00-\\u9fa5]{1,6}";
-        String regex_text = "[\\u4e00-\\u9fa5]{1,50}";
         if(fenlei1id==null)return new CommonResult(400,"id格式不正确");
         if(name==null||!name.trim().matches(regex))return new CommonResult(400,"名字格式不正确");
-        if(text==null||!text.trim().matches(regex_text))return new CommonResult(400,"text格式不正确");
         fenlei2 fenlei2 = new fenlei2();
         fenlei2.setFenlei1id(fenlei1id);
         fenlei2.setName(name);
-        fenlei2.setText(text);
         fenlei2.setStatus(1);
-        if (!files.isEmpty()&&files.size()>0) {
-            String icon=logService.Uploads(files);
+        if (files!=null) {
+            String icon=logService.logUpload(files);
             if(!icon.equals("error")){
                 fenlei2.setIcon(icon);
             }else {
                 return new CommonResult(400,"图片发送失败");
             }
+        }
+        else {
+            return new CommonResult(400,"需要一张图片");
         }
         if(productService.creatfenlei2(fenlei2)>0) {
             return new CommonResult<fenlei2>(200,"创建成功",fenlei2);
@@ -303,8 +303,10 @@ public class ProductController {
         if(fenlei2.getFenlei2id()==null)return new CommonResult(400,"fenlei2id格式不正确");
         if(fenlei2.getName()==null||!fenlei2.getName().trim().matches(regex))return new CommonResult(400,"名字格式不正确");
         if (fenlei2.getStatus()!=1&&fenlei2.getStatus()!=0)return new CommonResult(400,"status格式不正确");
-
-        String icon=logService.Uploads(files);
+        String icon = "";
+        if(!files.isEmpty()&&files.size()>0){
+            icon=logService.logUpload(files.get(0));
+        }
         if (icon.equals("error")) {
             return new CommonResult(400,"图片发送失败");
         }else if(icon.equals("")){
@@ -327,6 +329,10 @@ public class ProductController {
     @PostMapping("/updataifproductstatuss/{productid}/{status}")
     public product updataifproductstatuss(@PathVariable(value = "productid") BigInteger productid,@PathVariable(value = "status") int status){
         return productService.updataifproductstatuss(productid,status);
+    }
+    @GetMapping("/glbs/getproductlist/{yie}/{pianyi}")
+    public CommonResult<Map> getproductlist(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi) {
+        return new CommonResult<Map> (200,"成功",productService.getproductlist(yie,pianyi,new product()));
     }
 
     @PostMapping(value = "/upload")

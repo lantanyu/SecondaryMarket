@@ -122,6 +122,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map getcountcuser2(Integer yie, Integer paixu, BigInteger userid) {
+        yie = (yie-1)*30;
         Page<Object> page = PageHelper.offsetPage(yie, 30);
         if (paixu==0){
             List<cuser> list = userMapper.getcountcuser2(userid);
@@ -140,10 +141,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map getfancuser(Integer yie, Integer paixu, BigInteger byuserid) {
+        yie = (yie-1)*30;
         Page<Object> page = PageHelper.offsetPage(yie, 30);
         List<cuser> list = userMapper.getfancuser(byuserid);
         Map map = new HashMap();
         map.put("list",list);
+        map.put("total",page.getTotal());
+        return map;
+    }
+
+    @Override
+    public Map getuserlist(Integer yie,Integer pianyi,cuser cuser) {
+        yie = (yie-1)*pianyi;
+        Page<Object> page = PageHelper.offsetPage(yie, pianyi);
+        List<cuser> getuserlist = userMapper.getuserlist(cuser);
+        Map map = new HashMap();
+        map.put("list",getuserlist);
         map.put("total",page.getTotal());
         return map;
     }

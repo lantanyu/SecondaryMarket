@@ -21,14 +21,14 @@ public class product implements Serializable {
     private String pic;
     private String productidname;
     private String text;
-    private int deletestatus;
-    private int productstatus;
-    private int method;
+    private Integer deletestatus;
+    private Integer productstatus;
+    private Integer method;
     private double price;
     private double baoyouprice;
     private Timestamp fabutime;
     private String city;
-    private int sort;
+    private Integer sort;
     private String fenlen2name;
     private List<comment> comments;
     private long total;

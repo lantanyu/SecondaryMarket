@@ -81,6 +81,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Map getproductbyfenlei2(BigInteger fenlei2id, int yie) {
+        yie = (yie-1)*10;
         Page<Object> page = PageHelper.offsetPage(yie, 10);
         List<product> products = productMapper.getproductbyfenlei2(fenlei2id);
         Map map = new HashMap();
@@ -160,7 +161,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Integer updatafenlei2(fenlei2 fenlei2) {
-        return productMapper.updatafenlei2(fenlei2);
+        if(fenlei2.getIcon()==null){
+            return productMapper.updatafenlei2s(fenlei2);
+        }else {
+            return productMapper.updatafenlei2(fenlei2);
+        }
     }
 
     @Override
@@ -191,5 +196,16 @@ public class ProductServiceImpl implements ProductService {
         }else{
             return productMapper.getproductifbyid(productid);
         }
+    }
+
+    @Override
+    public Map getproductlist(Integer yie, Integer pianyi, product product) {
+        yie = (yie-1)*pianyi;
+        Page<Object> page = PageHelper.offsetPage(yie, pianyi);
+        List<product> getproductlist = productMapper.getproductlist(product);
+        Map map = new HashMap();
+        map.put("list",getproductlist);
+        map.put("total",page.getTotal());
+        return map;
     }
 }

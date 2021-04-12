@@ -26,4 +26,5 @@ public interface UserService {
     public List<cuser> getcountcuser(Integer yie,Integer paixu,BigInteger userid);
     public Map getcountcuser2(Integer yie, Integer paixu, BigInteger userid);
     public Map getfancuser(Integer yie, Integer paixu, BigInteger userid);
+    public Map getuserlist(Integer yie,Integer pianyi,cuser cuser);
 }

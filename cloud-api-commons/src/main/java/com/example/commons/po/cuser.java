@@ -20,9 +20,9 @@ public class cuser implements Serializable {
     private String phone;
     private String icon;
     private Timestamp createtime;
-    private int gender;
-    private int xingyongfen;
-    private int status;
+    private Integer gender;
+    private Integer xingyongfen;
+    private Integer status;
     private String city;
     private String token;
 }

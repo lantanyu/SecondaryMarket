@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -39,7 +40,9 @@ public interface ProductMapper {
     public Integer updatafenlei1status(fenlei1 fenlei1);
     public Integer updatafenlei2status(fenlei2 fenlei2);
     public Integer updatafenlei2(fenlei2 fenlei2);
+    public Integer updatafenlei2s(fenlei2 fenlei2);
     public Integer ifproductstatus(@Param("productid")BigInteger productid);
     public Integer updataifproductstatus(@Param("productid")BigInteger productid,@Param("status")int status);
     public Integer updataifproductstatuss(@Param("productid")BigInteger productid,@Param("status")int status);
+    public List<product> getproductlist(product product);
 }

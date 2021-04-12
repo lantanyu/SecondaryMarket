@@ -239,6 +239,31 @@ public class UserController {
         }
         return new CommonResult<Map>(200,"成功",userService.getfancuser(yie,paixu,byuserid));
     }
+    @GetMapping("/glbs/getuserlist/{yie}/{pianyi}/{name}")
+    public CommonResult<Map> getuserlist(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi,@PathVariable(name = "name") String name) {
+        cuser cuser = new cuser();
+        if(name.equals("没有数据")){
+            name="";
+        }
+        cuser.setName(name);
+        return new CommonResult<Map> (200,"成功",userService.getuserlist(yie,pianyi, cuser));
+    }
+    @GetMapping("/glbs/getuserlistbyid/{userid}")
+    public CommonResult<Map> getuserlistbyid(@PathVariable(name = "userid") BigInteger userid) {
+        cuser cuser = new cuser();
+        cuser.setUserid(userid);
+        return new CommonResult<Map> (200,"成功",userService.getuserlist(1,1,cuser));
+    }
+    @GetMapping("/glbs/getuserlistbystatus/{yie}/{pianyi}/{status}/{name}")
+    public CommonResult<Map> getuserlistbystatus(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi,@PathVariable(name = "status") Integer status,@PathVariable(name = "name") String name) {
+        cuser cuser = new cuser();
+        cuser.setStatus(status);
+        if(name.equals("没有数据")){
+            name="";
+        }
+        cuser.setName(name);
+        return new CommonResult<Map> (200,"成功",userService.getuserlist(yie,pianyi,cuser));
+    }
 
 
 

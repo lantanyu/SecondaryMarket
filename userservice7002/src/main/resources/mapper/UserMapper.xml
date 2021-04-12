@@ -154,5 +154,20 @@
         ON R1.userid = cuser.userid
     </select>
 
+    <select id="getuserlist"  resultType="cuser">
+        SELECT * FROM cuser
+        <where>
+            <if test="userid !=null and userid !=0">
+                and userid = #{userid}
+            </if>
+            <if test="name !=null and name !=''">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="status !=null ">
+                and `status` =#{status}
+            </if>
+        </where>
+    </select>
+
 
 </mapper>
