@@ -264,6 +264,16 @@ public class UserController {
         cuser.setName(name);
         return new CommonResult<Map> (200,"成功",userService.getuserlist(yie,pianyi,cuser));
     }
+    @PostMapping("/glbs/fjuser")
+    public CommonResult fjuser(@RequestBody cuser cuser){
+        if(cuser.getUserid()==null) return new CommonResult (400,"id");
+        if(cuser.getStatus()!=0&&cuser.getStatus()!=2) return new CommonResult (400,"Status");
+        if(userService.fjuser(cuser)>0){
+            return new CommonResult (200,"成功");
+        }else {
+            return new CommonResult (400,"失败");
+        }
+    }
 
 
 

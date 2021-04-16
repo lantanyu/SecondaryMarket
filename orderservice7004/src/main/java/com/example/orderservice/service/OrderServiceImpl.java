@@ -5,18 +5,21 @@ import com.example.orderservice.Listener.chashong;
 import com.example.orderservice.dao.OrderMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 @Slf4j
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
@@ -36,11 +39,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<order> getorder(cuser cuser,int ifs) {
+    public Map getorder(Integer yie,Integer pianyi,cuser cuser,int ifs) {
+        yie = (yie-1)*pianyi;
+        Page<Object> page = PageHelper.offsetPage(yie, pianyi);
         if(ifs==1){
-            return orderMapper.getorder1(cuser.getUserid());
+            List<order> orders = orderMapper.getorder1(cuser.getUserid());
+            Map map = new HashMap();
+            map.put("list",orders);
+            map.put("total",page.getTotal());
+            return map;
+
         }else {
-            return orderMapper.getorder2(cuser.getUserid());
+            List<order> orders2 = orderMapper.getorder2(cuser.getUserid());
+            Map map = new HashMap();
+            map.put("list",orders2);
+            map.put("total",page.getTotal());
+            return map;
         }
     }
 
@@ -150,13 +164,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Integer yestuihuo(BigInteger addressid, BigInteger byorderid,cuser cuser) {
+    public Integer yestuihuo(BigInteger addressid, BigInteger byorderid,cuser cuser,byorder byorder) {
         if(!orderMapper.yanzhenbyuser(byorderid).equals(cuser.getUserid())){
             return -1;
         }
         CommonResult<address> commonResult = userservice.getaddressbyid(addressid);
         address address = commonResult.getData();
-        byorder byorder = new byorder();
         byorder.setByorderid(byorderid);
         byorder.setAddressname(address.getName());
         byorder.setProvince(address.getProvince());
@@ -165,6 +178,22 @@ public class OrderServiceImpl implements OrderService {
         byorder.setDetailaddresss(address.getDetailaddresss());
         byorder.setPhone(address.getPhone());
         return orderMapper.yestuihuo(byorder);
+    }
+
+    @Override
+    public Integer notuihuo(BigInteger byorderid, cuser cuser) {
+        if(!orderMapper.yanzhenbyuser(byorderid).equals(cuser.getUserid())){
+            return -1;
+        }
+        return orderMapper.notuihuo(byorderid);
+    }
+
+    @Override
+    public Integer readytuihuo(BigInteger byorderid, cuser cuser) {
+        if(!orderMapper.yanzhenuser(byorderid).equals(cuser.getUserid())){
+            return -1;
+        }
+        return orderMapper.readytuihuo(byorderid);
     }
 
     @Override
@@ -211,6 +240,43 @@ public class OrderServiceImpl implements OrderService {
         }else {
             log.info("==订单没有超时");
         }
+    }
+
+    @Override
+    public Map getorderlist(Integer yie,Integer pianyi,order order) {
+        yie = (yie-1)*pianyi;
+        Page<Object> page = PageHelper.offsetPage(yie, pianyi);
+        List<com.example.commons.po.order> getorderlist = orderMapper.getorderlist(order);
+        Map map = new HashMap();
+        map.put("list",getorderlist);
+        map.put("total",page.getTotal());
+        return map;
+    }
+
+    @Override
+    public Integer orderct(ck ck) {
+        return orderMapper.orderct(ck);
+    }
+
+    @Override
+    public Map getcklist(Integer yie, Integer pianyi, ck ck) {
+        yie = (yie-1)*pianyi;
+        Page<Object> page = PageHelper.offsetPage(yie, pianyi);
+        List<com.example.commons.po.ck> getcklist = orderMapper.getcklist(ck);
+        Map map = new HashMap();
+        map.put("list",getcklist);
+        map.put("total",page.getTotal());
+        return map;
+    }
+
+    @Override
+    public Integer updateck(ck ck) {
+        return orderMapper.updateck(ck);
+    }
+
+    @Override
+    public Integer rengong(BigInteger orderid) {
+        return orderMapper.rengong(orderid);
     }
 
 

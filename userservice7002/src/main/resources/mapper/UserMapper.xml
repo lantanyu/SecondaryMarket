@@ -22,7 +22,7 @@
     <select id="denru" resultType="cuser">
         SELECT *
         FROM cuser
-        WHERE cuser.username=#{username} AND cuser.`password`=#{password}
+        WHERE cuser.username=#{username} AND cuser.`password`=#{password} AND `status` =0
     </select>
 
     <select id="gldenru" resultType="auser">
@@ -168,6 +168,12 @@
             </if>
         </where>
     </select>
+
+    <update id="fjuser" parameterType="cuser">
+        UPDATE cuser
+        SET `status` =#{status}
+        WHERE userid=#{userid}
+    </update>
 
 
 </mapper>

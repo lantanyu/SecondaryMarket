@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @CrossOrigin
@@ -52,48 +53,13 @@ public class OrderController {
     public CommonResult seeorder(){
         return new  CommonResult<String> (200,"sdsd",productservice.ifproductstatus(new BigInteger("1")));
     }
-//    @PostMapping("/createorder/{addressid}/{productid}")
-//    public CommonResult createorder(@PathVariable(value = "addressid") BigInteger addressid, @PathVariable(value = "productid") BigInteger productid, HttpServletRequest request){
-//        product product = productservice.updataifproductstatus(productid,1);
-//
-//        if(product==null){
-//            return new  CommonResult<String> (200,"被人抢先了","被人抢先了");
-//        }
-//        CommonResult<address> commonResult = userservice.getaddressbyid(addressid);
-//        address address = commonResult.getData();
-//        String token = request.getHeader("token");
-//        cuser cuser = redisService.get(token);
-//        order order = new order();
-//        order.setProductid(productid);
-//        order.setUserid(cuser.getUserid());
-//        order.setSn(UUID.randomUUID()+"");
-//        order.setBaoyouprice(product.getBaoyouprice());
-//        order.setPrice(product.getPrice());
-//        order.setProductname(product.getProductidname());
-//        order.setProducticon(product.getPic());
-//        order.setStatus(0);//0待付款，1待发货，2待收货，3待确定，4交易关闭，5交易完成
-//        order.setMethod(product.getMethod());
-//        order.setAddressname(address.getName());
-//        order.setProvince(address.getProvince());
-//        order.setCity(address.getCity());
-//        order.setRegion(address.getRegion());
-//        order.setDetailaddresss(address.getDetailaddresss());
-//        order.setPhone(address.getPhone());
-//        order.setByuserid(product.getUserid());
-//        Date date = new Date();
-//        Timestamp timestamp = new Timestamp(date.getTime());
-//        order.setTijiaotime(timestamp);
-//        if(orderService.createorder(order)>0){
-//            return new  CommonResult<order> (200,"创建成功",order);
-//        }
-//        return new CommonResult(200,"创建失败");
-//    }
-    @GetMapping("/getorder/{ifs}")
-    public  CommonResult getorder(@PathVariable(value = "ifs") int ifs,HttpServletRequest request) {
+
+    @GetMapping("/getorder/{yie}/{pianyi}/{ifs}")
+    public  CommonResult getorder(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi,@PathVariable(value = "ifs") int ifs,HttpServletRequest request) {
         if(ifs!=1&&ifs!=2)return new CommonResult(400,"ifs只能为1或2");
         String token = request.getHeader("token");
         cuser cuser = redisService.get(token);
-        return new  CommonResult<List<order>> (200,"创建成功",orderService.getorder(cuser,ifs));
+        return new  CommonResult<Map> (200,"创建成功",orderService.getorder(yie,pianyi,cuser,ifs));
     }
     @GetMapping("getbyorder/{orderid}")
     public CommonResult getbyorder(@PathVariable(value = "orderid")BigInteger orderid) {
@@ -175,12 +141,39 @@ public class OrderController {
     public CommonResult yestuihuo(@PathVariable(value = "addressid") BigInteger addressid,@PathVariable(value = "byorderid") BigInteger byorderid,HttpServletRequest request){
         String token = request.getHeader("token");
         cuser cuser = redisService.get(token);
-        int i = orderService.yestuihuo(addressid,byorderid,cuser);
+        byorder byorder = new byorder();
+        int i = orderService.yestuihuo(addressid,byorderid,cuser,byorder);
         if (i==-1){
             return  new CommonResult(400,"身份错误");
         }
         if(i>0){
-            return new  CommonResult(200,"同意成功");
+            return new  CommonResult(200,"同意成功",byorder);
+        }
+        return new CommonResult(400,"失败");
+    }
+    @PostMapping("/notuihuo/{byorderid}")
+    public CommonResult notuihuo(@PathVariable(value = "byorderid") BigInteger byorderid,HttpServletRequest request) {
+        String token = request.getHeader("token");
+        cuser cuser = redisService.get(token);
+        int i = orderService.notuihuo(byorderid,cuser);
+        if(i==-1) {
+            return  new CommonResult(400,"身份错误");
+        }
+        if(i>0){
+            return new  CommonResult(200,"拒绝成功");
+        }
+        return new CommonResult(400,"失败");
+    }
+    @PostMapping("/readytuihuo/{byorderid}")
+    public CommonResult readytuihuo(@PathVariable(value = "byorderid") BigInteger byorderid,HttpServletRequest request) {
+        String token = request.getHeader("token");
+        cuser cuser = redisService.get(token);
+        int i = orderService.readytuihuo(byorderid,cuser);
+        if(i==-1) {
+            return  new CommonResult(400,"身份错误");
+        }
+        if(i>0){
+            return new  CommonResult(200,"申请成功");
         }
         return new CommonResult(400,"失败");
     }
@@ -219,6 +212,64 @@ public class OrderController {
     public CommonResult shiyanrabbitmq(){
         orderService.shiyan();
         return null;
+    }
+    @PostMapping("/glbs/getorderlist/{yie}/{pianyi}")
+    public CommonResult<Map> getorderlist(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi,@RequestBody order order) {
+        if(order==null) {
+            return new CommonResult(400,"失败");
+        }else {
+            return new CommonResult<Map>(200,"成功",orderService.getorderlist(yie, pianyi, order));
+        }
+
+    }
+    @PostMapping("orderct")
+    public CommonResult orderct(@RequestBody ck ck,HttpServletRequest request) {
+        String regex_name = "\\S{1,50}";
+        if(ck.getOrderid()==null) return new CommonResult(400,"id有问题");
+        if(ck.getText()==null||!ck.getText().matches(regex_name)) return new CommonResult(400,"text格式不正确");
+        String token = request.getHeader("token");
+        cuser cuser = redisService.get(token);
+        ck.setUserid(cuser.getUserid());
+        if(orderService.orderct(ck)>0) {
+            return new CommonResult<ck>(200,"成功",ck);
+        }else {
+            return new CommonResult(400, "失败");
+        }
+    }
+    @PostMapping("/getcklist/{yie}/{pianyi}")
+    public CommonResult<Map> getcklist(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi,@RequestBody ck ck) {
+        if(ck==null) {
+            return new CommonResult(400,"失败");
+        }else {
+            return new CommonResult<Map>(200,"成功",orderService.getcklist(yie, pianyi, ck));
+        }
+    }
+    @PostMapping("/updateck")
+    public CommonResult updateck2(@RequestBody ck ck){
+        if(ck.getCkid()==null)return new CommonResult(400,"请传入id");
+        if(ck.getStatus()!=null)return new CommonResult(400,"没有权限");
+        if(orderService.updateck(ck)>0){
+            return new CommonResult(200,"成功");
+        }else {
+            return new CommonResult(400,"失败");
+        }
+    }
+    @PostMapping("/glbs/updateck")
+    public CommonResult updateck(@RequestBody ck ck){
+        if(ck.getCkid()==null)return new CommonResult(400,"请传入id");
+        if(orderService.updateck(ck)>0){
+            return new CommonResult(200,"成功");
+        }else {
+            return new CommonResult(400,"失败");
+        }
+    }
+    @PostMapping("/glbs/rengong/{orderid}")
+    public CommonResult rengong(@PathVariable(name = "orderid") BigInteger orderid){
+        if(orderService.rengong(orderid)>0){
+            return new CommonResult(200,"成功");
+        }else {
+            return new CommonResult(400,"失败");
+        }
     }
 
 

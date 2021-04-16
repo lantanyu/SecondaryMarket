@@ -330,10 +330,44 @@ public class ProductController {
     public product updataifproductstatuss(@PathVariable(value = "productid") BigInteger productid,@PathVariable(value = "status") int status){
         return productService.updataifproductstatuss(productid,status);
     }
-    @GetMapping("/glbs/getproductlist/{yie}/{pianyi}")
-    public CommonResult<Map> getproductlist(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi) {
-        return new CommonResult<Map> (200,"成功",productService.getproductlist(yie,pianyi,new product()));
+    @GetMapping("/glbs/getproductlist/{yie}/{pianyi}/{productidname}")
+    public CommonResult<Map> getproductlist(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi,@PathVariable(name = "productidname") String productidname) {
+        product product = new product();
+        if(!productidname.equals("没有数据")){
+            product.setProductidname(productidname);
+        }
+        return new CommonResult<Map> (200,"成功",productService.getproductlist(yie,pianyi,product));
     }
+    @GetMapping("/glbs/getproductlistbyproductid/{productid}")
+    public CommonResult<Map> getproductlistbyproductid(@PathVariable(name = "productid") BigInteger productid) {
+        product product = new product();
+        product.setProductid(productid);
+        return new CommonResult<Map> (200,"成功",productService.getproductlist(1,1,product));
+    }
+    @GetMapping("/glbs/getproductlistbyuserid/{yie}/{pianyi}/{userid}")
+    public CommonResult<Map> getproductlistbyuserid(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi,@PathVariable(name = "userid") BigInteger userid) {
+        product product = new product();
+        product.setUserid(userid);
+        return new CommonResult<Map> (200,"成功",productService.getproductlist(yie,pianyi,product));
+    }
+    @GetMapping("/glbs/getproductlistbyusername/{yie}/{pianyi}/{username}")
+    public CommonResult<Map> getproductlistbyusername(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi,@PathVariable(name = "username") String username) {
+        product product = new product();
+        if(!username.equals("没有数据")){
+            product.setUsername(username);
+        }
+        return new CommonResult<Map> (200,"成功",productService.getproductlist(yie,pianyi,product));
+    }
+    @GetMapping("/glbs/getproductlistbyproductstatus/{yie}/{pianyi}/{productstatus}/{productidname}")
+    public CommonResult<Map> getproductlistbyproductstatus(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "pianyi") Integer pianyi,@PathVariable(name = "productstatus") Integer productstatus,@PathVariable(name = "productidname") String productidname) {
+        product product = new product();
+        if(!productidname.equals("没有数据")){
+            product.setProductidname(productidname);
+        }
+        product.setProductstatus(productstatus);
+        return new CommonResult<Map> (200,"成功",productService.getproductlist(yie,pianyi,product));
+    }
+
 
     @PostMapping(value = "/upload")
     public String logUpload(@RequestParam("file") MultipartFile file)  {

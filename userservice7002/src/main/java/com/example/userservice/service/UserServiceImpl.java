@@ -160,4 +160,9 @@ public class UserServiceImpl implements UserService {
         map.put("total",page.getTotal());
         return map;
     }
+
+    @Override
+    public Integer fjuser(cuser cuser) {
+        return userMapper.fjuser(cuser);
+    }
 }

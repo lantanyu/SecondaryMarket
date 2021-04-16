@@ -20,8 +20,8 @@ public class order implements Serializable {
     private double price;
     private String productname;
     private String producticon;
-    private int status;
-    private int method;
+    private Integer status;
+    private Integer method;
     private String addressname;
     private String province;
     private String city;
@@ -32,7 +32,7 @@ public class order implements Serializable {
     private Timestamp zhifutime;
     private Timestamp fahuotime;
     private Timestamp sohuotime;
-    private int delectstatus;
+    private Integer delectstatus;
     private String kuidihao;
     private BigInteger byuserid;
     private String kuidi;

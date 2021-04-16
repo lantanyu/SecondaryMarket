@@ -38,4 +38,5 @@ public interface UserMapper {
     public List<cuser> getcountcuser3(@Param("userid")BigInteger userid);
     public List<cuser> getfancuser(@Param("userid")BigInteger userid);
     public List<cuser> getuserlist(cuser cuser);
+    public Integer fjuser(cuser cuser);
 }

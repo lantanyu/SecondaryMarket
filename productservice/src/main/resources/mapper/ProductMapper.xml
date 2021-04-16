@@ -269,6 +269,12 @@
             <if test="productid !=null and productid != 0 ">
                 and productid=#{productid}
             </if>
+            <if test="userid !=null and userid != 0">
+                and userid = #{userid}
+            </if>
+            <if test="username !=null and username != ''">
+                and username like concat('%',#{username},'%')
+            </if>
             <if test="productidname !=null and productidname != '' ">
                 and MATCH(productidname,text) AGAINST(#{productidname})
             </if>
