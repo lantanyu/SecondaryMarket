@@ -129,7 +129,11 @@ public class OrderServiceImpl implements OrderService {
         if (product!=null){
             int i = orderMapper.queding(orderid,userid,timestamp);
             if (i>0){
-                System.out.println("----模拟转账给卖家，转账成功");
+                log.info("----模拟转账给卖家，转账成功");
+                cuser cuser = new cuser();
+                cuser.setUserid(userid);
+                cuser.setXingyongfen(10);
+                userservice.fjuser(cuser);
                 return i;
             }else {
                 return i;

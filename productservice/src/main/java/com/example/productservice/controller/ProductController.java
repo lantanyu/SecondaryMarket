@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -144,6 +145,8 @@ public class ProductController {
         comment.setUserid(cuser.getUserid());
         comment.setName(cuser.getName());
         comment.setIcon(cuser.getIcon());
+        List list = new ArrayList();
+        comment.setBycomments(list);
         if (productService.creatcomment(comment)>0){
             return new CommonResult<comment>(200,"成功",comment);
         }

@@ -171,7 +171,14 @@
 
     <update id="fjuser" parameterType="cuser">
         UPDATE cuser
-        SET `status` =#{status}
+        <set>
+            <if test="xingyongfen !=null">
+                xingyongfen = xingyongfen + #{xingyongfen},
+            </if>
+            <if test="status !=null ">
+                `status`=#{status},
+            </if>
+        </set>
         WHERE userid=#{userid}
     </update>
 

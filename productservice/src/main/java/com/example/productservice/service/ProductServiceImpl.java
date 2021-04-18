@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public fenlei1 shiyan(){
         fenlei1 fenlei1 = productMapper.shiyan4();
-        try { TimeUnit.SECONDS.sleep(20); } catch (InterruptedException e){ e.printStackTrace(); }
+        try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e){ e.printStackTrace(); }
         return fenlei1 ;
     }
     @Override

@@ -8,6 +8,9 @@ import com.example.orderservice.service.Productservice;
 import com.example.orderservice.service.RedisService1;
 import com.example.orderservice.service.Userservice;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -28,6 +31,13 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequestMapping("/order")
+@DefaultProperties(defaultFallback = "allerror",commandProperties = {
+        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "5000"),
+        @HystrixProperty(name = "circuitBreaker.enabled",value = "true"),//是否开起熔断
+        @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold",value = "10"),//请求次数
+        @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds",value = "10000"),//时间窗口
+        @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage",value = "60")//失败率跳闸
+})//全局服务降级
 public class OrderController {
     @Autowired
     private OrderService orderService;
@@ -43,10 +53,11 @@ public class OrderController {
     private  ApplicationContext applicationContext;
 
 
-
+    @HystrixCommand
     @GetMapping("/shiyan")
     public CommonResult shiyan() {
-        return productservice.shiyan();
+        CommonResult commonResult = productservice.shiyan();
+        return commonResult;
     }
 
     @GetMapping("/seeorder")
@@ -271,6 +282,9 @@ public class OrderController {
             return new CommonResult(400,"失败");
         }
     }
+    public CommonResult allerror() {
+        return new CommonResult(400,"发生错误");
+    };
 
 
 }
