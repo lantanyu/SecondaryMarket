@@ -216,7 +216,7 @@ public class UserController {
         }
             return new CommonResult<List<cuser>>(200,"成功",userService.getcountcuser(yie,paixu,userid));
     }
-    @GetMapping("getcountcuser3/{yie}/{paixu}/{userid}")
+    @GetMapping("/all/getcountcuser3/{yie}/{paixu}/{userid}")
     public CommonResult<Map> getcountcuser3(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "paixu") Integer paixu, @PathVariable(name = "userid") BigInteger userid ) {
         if(paixu!=0&&paixu!=1) {
             return new CommonResult(400,"排序规则没有");
@@ -232,7 +232,7 @@ public class UserController {
         cuser cuser = redisService1.get(token);
         return new CommonResult<List<cuser>>(200,"成功",userService.getcountcuser(yie,paixu,cuser.getUserid()));
     }
-    @GetMapping("getfancuser/{yie}/{paixu}/{userid}")
+    @GetMapping("/all/getfancuser/{yie}/{paixu}/{userid}")
     public CommonResult<Map> getfancuser(@PathVariable(name = "yie") Integer yie, @PathVariable(name = "paixu") Integer paixu, @PathVariable(name = "userid") BigInteger byuserid ) {
         if(paixu!=0&&paixu!=1) {
             return new CommonResult(400,"排序规则没有");
