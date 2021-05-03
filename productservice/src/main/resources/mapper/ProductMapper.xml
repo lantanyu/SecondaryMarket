@@ -97,7 +97,7 @@
     <select id="getproductbyfenlei2" resultType="product">
         SELECT *
         FROM product
-        WHERE fenlei2id = #{fenlei2id} AND deletestatus =1 AND method =0 AND productstatus=0
+        WHERE fenlei2id = #{fenlei2id} AND deletestatus =1 AND productstatus=0
         ORDER BY sort DESC
     </select>
 

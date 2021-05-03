@@ -149,7 +149,7 @@
 
     <select id="getfancuser" resultType="cuser">
         SELECT *
-        FROM (SELECT concern.userid FROM concern WHERE concern.byuserid=#{userid} ORDER BY createtime DESC) AS R1
+        FROM (SELECT concern.userid FROM concern WHERE concern.byuserid=#{userid} AND `status`=1 ORDER BY createtime DESC) AS R1
         INNER JOIN cuser
         ON R1.userid = cuser.userid
     </select>
