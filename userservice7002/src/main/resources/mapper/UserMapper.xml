@@ -182,5 +182,11 @@
         WHERE userid=#{userid}
     </update>
 
+    <update id="settoken" parameterType="cuser">
+        UPDATE cuser
+        SET token = #{token}
+        WHERE userid=#{userid}
+    </update>
+
 
 </mapper>

@@ -76,8 +76,8 @@ public class OrderController {
     @GetMapping("getbyorder/{orderid}")
     public CommonResult getbyorder(@PathVariable(value = "orderid")BigInteger orderid) {
        return new CommonResult<byorder>(200,"成功",orderService.getbyorder(orderid));
-    };
-
+    }
+    @HystrixCommand
     @PostMapping("/createorder/{addressid}/{productid}")
     public CommonResult createorder(@PathVariable(value = "addressid") BigInteger addressid, @PathVariable(value = "productid") BigInteger productid, HttpServletRequest request) throws JsonProcessingException {
         order order = new order();

@@ -12,4 +12,6 @@ public interface RedisService1<T> {
      */
     T get(String key);
 
+    void delect(String key);
+
 }

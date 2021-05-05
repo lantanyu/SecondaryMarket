@@ -16,6 +16,8 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    private RedisService1<cuser> redisService1;
 
 
     @Override
@@ -163,6 +165,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer fjuser(cuser cuser) {
+        cuser cuser2  = userMapper.userbyid(cuser.getUserid());
+        if(cuser2.getToken()!=null) {
+            redisService1.delect(cuser2.getToken());
+        }
         return userMapper.fjuser(cuser);
+    }
+
+    @Override
+    public Integer settoken(cuser cuser) {
+        return userMapper.settoken(cuser);
     }
 }

@@ -19,4 +19,9 @@ public class RedisService1Impl<T> implements RedisService1<T> {
     public T get(String key) {
         return (T)redisTemplate.opsForValue().get(key);
     }
+
+    @Override
+    public void delect(String key) {
+        redisTemplate.delete(key);
+    }
 }

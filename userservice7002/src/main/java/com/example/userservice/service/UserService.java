@@ -28,4 +28,5 @@ public interface UserService {
     public Map getfancuser(Integer yie, Integer paixu, BigInteger userid);
     public Map getuserlist(Integer yie,Integer pianyi,cuser cuser);
     public Integer fjuser(cuser cuser);
+    public Integer settoken(cuser cuser);
 }

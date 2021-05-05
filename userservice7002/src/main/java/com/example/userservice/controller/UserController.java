@@ -48,6 +48,7 @@ public class UserController {
             String token = UUID.randomUUID()+"";
             redisService1.set(token,cuser1,60*60);
             cuser1.setToken(token);
+            userService.settoken(cuser1);
             return new CommonResult<cuser>(200,"登入成功",cuser1);
         }
         return  new CommonResult(400,"密码错误");

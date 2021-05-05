@@ -39,4 +39,5 @@ public interface UserMapper {
     public List<cuser> getfancuser(@Param("userid")BigInteger userid);
     public List<cuser> getuserlist(cuser cuser);
     public Integer fjuser(cuser cuser);
+    public Integer settoken(cuser cuser);
 }
